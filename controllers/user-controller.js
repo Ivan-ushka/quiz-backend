@@ -77,6 +77,25 @@ class UserController{
              next(error)
         }
     }
+
+    async getUser(req, res, next){
+        try {
+            const {refreshToken} = req.cookies;
+            const userData  = await userService.getUser(refreshToken);
+            return res.json(userData)
+        }catch (e) {
+            next(e)
+        }
+    }
+
+    async update(req, res, next){
+        try {
+            const userData  = await userService.update(req.body);
+            return res.json(userData)
+        }catch (e) {
+            next(e)
+        }
+    }
 }
 
 module.exports = new UserController();

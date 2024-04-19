@@ -18,6 +18,8 @@ router.post('/set-quiz', quizController.setQuiz);
 router.get('/all-quizzes', quizController.getAllQuizzes);
 router.get('/auth-quizzes',authMiddleware, quizController.getAuthQuizzes);
 router.get('/quiz/:id', quizController.getQuizByID);
+router.get('/user', userController.getUser);
+router.patch('/user/update/', userController.update);
 
 
 

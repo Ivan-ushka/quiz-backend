@@ -1,7 +1,13 @@
 create TABLE person(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
-    password VARCHAR(255)
+    password VARCHAR(255),
+    gender VARCHAR(6),
+    location VARCHAR(200),
+    birthday Data,
+    github VARCHAR(50)
+    linkedin VARCHAR(50)
+    twitter VARCHAR(50)
 );
 
 create TABLE token(

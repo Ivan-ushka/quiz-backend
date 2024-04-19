@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const uuid = require('uuid');
 const ApiError = require("../exseptions/api-error");
 const db = require("../db/db")
-const UserDto = require("../dtos/user-dto");
+const {UserDto, FullUserDto} = require("../dtos/user-dto");
 const tokenService = require("../service/token-service")
 class UserService{ 
     async registration(name, password){
@@ -61,14 +61,45 @@ class UserService{
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
         return { ...tokens, user: userDto, }
-    } 
-    
-   /* async checkPwd(name, password){
-        const user = await db.query(`SELECT * FROM person WHERE name= $1;`, [name]);
-
-        return await bcrypt.compare(pwd, user.pwd);
     }
-*/
+    async getUser(refreshToken){
+        if(!refreshToken) throw ApiError.UnauthorizedError();
+
+        const userData = tokenService.validateRefreshToken(refreshToken);
+        if(!userData)  throw ApiError.UnauthorizedError();
+
+        const user = (await db.query(`SELECT * from person where id = $1`,[userData.id])).rows[0];
+        const fullUserDto = new FullUserDto(user);
+        console.log('full', fullUserDto)
+        return { user: fullUserDto }
+    }
+
+        async update(newDataUser){
+        console.log(newDataUser)
+            try {
+                const { id, ...fieldToUpdate } = newDataUser;
+                const field = Object.keys(fieldToUpdate)[0];
+                const value = fieldToUpdate[field];
+
+                const query = {
+                    text: `UPDATE person SET ${field} = $1 WHERE id = $2 RETURNING *`,
+                    values: [value, id]
+                };
+                const updatedPersonResult = await db.query(query);
+                const updatedPerson = updatedPersonResult.rows[0];
+                return { user: updatedPerson };
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+      /* async checkPwd(name, password){
+           const user = await db.query(`SELECT * FROM person WHERE name= $1;`, [name]);
+
+           return await bcrypt.compare(pwd, user.pwd);
+       }
+   */
     /*async changePwd(email, password){
         const hashPassword = await bcrypt.hash(password, 3)
 
