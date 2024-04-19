@@ -87,7 +87,8 @@ class UserService{
                 };
                 const updatedPersonResult = await db.query(query);
                 const updatedPerson = updatedPersonResult.rows[0];
-                return { user: updatedPerson };
+                const updatedPersonDto =  new FullUserDto(updatedPerson)
+                return {user: updatedPersonDto};
             } catch (error) {
                 console.error(error);
             }
