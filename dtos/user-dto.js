@@ -30,7 +30,7 @@ class FullUserDto{
         this.location = model.location;
         this.summary = model.summary;
         this.gitHub = model.github;
-        this.linkedIn = model.linkedIn;
+        this.linkedIn = model.linkedin;
         this.twitter = model.twitter;
 
     }
