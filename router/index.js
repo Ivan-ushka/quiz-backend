@@ -14,12 +14,15 @@ router.post('/registration',
 router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 router.get('/refresh', userController.refresh);
-router.post('/set-quiz', quizController.setQuiz);
-router.get('/all-quizzes', quizController.getAllQuizzes);
-router.get('/auth-quizzes',authMiddleware, quizController.getAuthQuizzes);
-router.get('/quiz/:id', quizController.getQuizByID);
 router.get('/user', userController.getUser);
-router.patch('/user/update/', userController.update);
+router.patch('/update/user/', userController.update);
+
+router.post('/set/quiz', quizController.setQuiz);
+router.put('/update/quiz', quizController.updateQuiz);
+router.get('/all/quizzes', quizController.getAllQuizzes);
+router.get('/auth/quizzes',authMiddleware, quizController.getAuthQuizzes);
+router.get('/quiz/:id', quizController.getQuizByID);
+
 
 
 

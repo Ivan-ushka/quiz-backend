@@ -7,23 +7,6 @@ const tokenService = require("./token-service");
 class QuizService{
 
     async setQuiz({quiz}) {
-        console.log(quiz)
-        const checkQuiz = await db.query(
-            'SELECT * FROM quizzes WHERE quizID = $1',
-            [quiz.quizID]
-        );
-
-
-
-        if (checkQuiz.rows.length > 0) {
-            // Quiz already exists, perform update
-            const updatedQuiz = await db.query(
-                'UPDATE quizzes SET quiz = $1 WHERE id = $2 RETURNING *',
-                [{quiz}, quiz.quizID]
-            );
-            return updatedQuiz;
-        }
-
         let maxQuizID = (await db.query(
             `SELECT id FROM quizzes  WHERE id = (SELECT MAX(id) FROM quizzes);`
         )).rows[0];
@@ -37,19 +20,29 @@ class QuizService{
             [quiz.quizID, {quiz}, quiz.userID] // Replace `5` with the appropriate user ID
         );
 
-        return insertedQuiz
+        return insertedQuiz.quiz
+    }
+
+    async updateQuiz({quiz}){
+        console.log(quiz)
+        const updatedQuiz = await db.query(
+            'UPDATE quizzes SET quiz = $1 WHERE quizid = $2 RETURNING *',
+            [quiz, quiz.quizID]
+        );
+        console.log(updatedQuiz)
+        return updatedQuiz.quiz;
     }
 
 
     async getAllQuizzes(){
         let quizzes = (await db.query('SELECT * FROM quizzes')).rows
-        quizzes = quizzes.map(item => item.quiz.quiz)
+        quizzes = quizzes.map(item => item.quiz)
         return quizzes
     }
 
     async getAuthQuizzes(id){
         let quizzes = (await db.query('SELECT * FROM quizzes where userID =$1',[id])).rows
-        quizzes = quizzes.map(item => item.quiz.quiz)
+        quizzes = quizzes.map(item => item.quiz)
         return quizzes
     }
 

@@ -28,7 +28,8 @@ describe("Express Tests", () => {
   });
 
 
-  it("check creating dublicate user", async () => {
+  // TODO: make response code 409
+  it("creating dublicate user. should return 400", async () => {
     const res = await request(app).post("/api/registration").send(userObj);
     console.log(res.body)
     expect(res.statusCode).toBe(400);
@@ -47,7 +48,7 @@ describe("Express Tests", () => {
       email: userObj.email,
       password: '12345'
     });
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(400)
     expect(res.body.message).toBe('Неверный пароль');
   });
 

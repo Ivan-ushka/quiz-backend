@@ -1,13 +1,21 @@
 const quizService = require("../service/quiz-service");
 const userService = require("../service/user-service");
-const {response} = require("express");
-
 class QuizController{
 
     async setQuiz(req, res, next){
         try {
             const quiz = req.body;
             const quizData = await quizService.setQuiz(quiz);
+            return res.json(quizData);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateQuiz(req, res, next){
+        try {
+            const quiz = req.body;
+            const quizData = await quizService.updateQuiz(quiz);
             return res.json(quizData);
         } catch (error) {
             next(error);
