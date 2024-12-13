@@ -13,26 +13,22 @@ class QuizService{
         maxQuizID ?  maxQuizID = maxQuizID.id + 1 :maxQuizID = 1
         quiz.quizID = maxQuizID.toString().padStart(6, '0')
 
-
-        // Quiz does not exist, perform insert
-        const insertedQuiz = await db.query(
+        const insertedQuiz = (await db.query(
             'INSERT INTO quizzes (quizId, quiz, userId) VALUES ($1, $2, $3) RETURNING *',
             [quiz.quizID, {quiz}, quiz.userID] // Replace `5` with the appropriate user ID
-        );
+        )).rows[0]
 
-        return insertedQuiz.quiz
+        return insertedQuiz
     }
 
     async updateQuiz({quiz}){
-        console.log(quiz)
-        const updatedQuiz = await db.query(
+        const updatedQuiz = (await db.query(
             'UPDATE quizzes SET quiz = $1 WHERE quizid = $2 RETURNING *',
             [quiz, quiz.quizID]
-        );
-        console.log(updatedQuiz)
-        return updatedQuiz.quiz;
-    }
+        )).rows[0];
 
+        return updatedQuiz;
+    }
 
     async getAllQuizzes(){
         let quizzes = (await db.query('SELECT * FROM quizzes')).rows
