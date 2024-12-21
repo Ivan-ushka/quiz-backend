@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --testTimeout=5000 --detectOpenHandles",
-    "dev": "nodemon index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
