@@ -1,7 +1,7 @@
 const quizService = require("../service/quiz-service");
 const userService = require("../service/user-service");
-class QuizController{
 
+class QuizController{
     async setQuiz(req, res, next){
         try {
             const quiz = req.body;
@@ -24,13 +24,13 @@ class QuizController{
 
     async getAllQuizzes(req, res, next){
         try {
-            const quiz = req.body;
             const quizData = await quizService.getAllQuizzes();
             return res.json(quizData);
         } catch (error) {
             next(error);
         }
     }
+
     async getAuthQuizzes(req, res, next){
         try {
             const {refreshToken} = req.cookies;
