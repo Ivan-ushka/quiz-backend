@@ -6,7 +6,6 @@ const router = new Router();
 const {body} = require('express-validator')
 
 
-
 router.post('/registration',
     body('name').isLength({min:4, max: 32}),
     body('pwd').isLength({min:4, max: 32}),
