@@ -31,7 +31,7 @@ class QuizService{
     }
 
     async getAllQuizzes(){
-        let quizzes = (await db.query('SELECT * FROM quizzes')).rows
+        let quizzes = (await db.query('SELECT * FROM quizzes'))[0]
         quizzes = quizzes.map(item => item.quiz)
         return quizzes
     }
