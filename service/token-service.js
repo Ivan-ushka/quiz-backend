@@ -40,7 +40,7 @@ class TokenService{
 
     async removeToken(refreshToken) {
         await db.query('DELETE FROM token WHERE refreshToken = ?', [refreshToken]);
-        return true; // Return a success flag or similar
+        return true;
     }
 
     async findToken(refreshToken) {
