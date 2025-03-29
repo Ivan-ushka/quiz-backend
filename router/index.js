@@ -20,6 +20,7 @@ router.put('/update/quiz', quizController.updateQuiz);
 router.get('/all/quizzes', quizController.getAllQuizzes);
 router.get('/auth/quizzes',authMiddleware, quizController.getAuthQuizzes);
 router.get('/quiz/:id', quizController.getQuizByID);
+router.delete('/delete/quiz/:id', quizController.deleteQuiz);
 
 module.exports = router;
 

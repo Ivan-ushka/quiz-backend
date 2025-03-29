@@ -51,6 +51,15 @@ class QuizController{
             next(error);
         }
     }
+
+    async deleteQuiz(req, res, next) {
+        try {
+            const quizId = req.params.id;
+            return res.json(await quizService.deleteQuizById(quizId));
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new QuizController();

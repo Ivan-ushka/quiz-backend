@@ -1,8 +1,4 @@
 const db = require("../db/db");
-const ApiError = require("../exseptions/api-error");
-const bcrypt = require("bcrypt");
-const UserDto = require("../dtos/user-dto");
-const tokenService = require("./token-service");
 
 class QuizService{
     async setQuiz({quiz}) {
@@ -17,7 +13,7 @@ class QuizService{
 
         const insertedQuiz = (await db.query(
             'INSERT INTO quizzes (quizId, quiz, userId) VALUES (?, ?, ?)',
-            [quiz.quizID, JSON.stringify({quiz}), quiz.userID]
+            [quiz.quizID, JSON.stringify(quiz), quiz.userID]
         ))
 
         return insertedQuiz[0]
@@ -39,6 +35,7 @@ class QuizService{
 
     async getAllQuizzes() {
         const [quizzes] = await db.query('SELECT * FROM quizzes');
+        console.log(quizzes.map(item => item.quiz))
         return quizzes.map(item => item.quiz);
     }
 
@@ -54,6 +51,20 @@ class QuizService{
         } catch (error) {
             throw error;
         }
+    }
+
+    async deleteQuizById(quizID) {
+        console.log(quizID)
+        const [result] = await db.query(
+            'DELETE FROM quizzes WHERE quizId = ?',
+            [quizID]
+        );
+
+        if (result.affectedRows === 0) {
+            throw new Error('Quiz not found or not deleted.');
+        }
+
+        return { message: 'Quiz deleted successfully.' };
     }
 }
 
