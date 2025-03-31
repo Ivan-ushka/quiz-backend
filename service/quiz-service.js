@@ -3,33 +3,40 @@ const db = require("../db/db");
 class QuizService{
     async setQuiz({quiz}) {
 
-        let maxQuizID = (await db.query(
+        let maxQuizId = (await db.query(
             `SELECT id FROM quizzes WHERE id = (SELECT MAX(id) FROM quizzes);`
         ))[0][0];
 
-        maxQuizID ? maxQuizID = maxQuizID.id + 1 :maxQuizID = 1
+        maxQuizId ? maxQuizId = maxQuizId.id + 1 :maxQuizId = 1
 
-        quiz.quizID = maxQuizID.toString().padStart(6, '0')
+        quiz.quizId = maxQuizId.toString().padStart(6, '0')
 
-        const insertedQuiz = (await db.query(
+        await db.query(
             'INSERT INTO quizzes (quizId, quiz, userId) VALUES (?, ?, ?)',
-            [quiz.quizID, JSON.stringify(quiz), quiz.userID]
-        ))
+            [quiz.quizId, JSON.stringify(quiz), quiz.userId]
+        )
 
-        return insertedQuiz[0]
+        const [selectedQuiz] = await db.query('SELECT * FROM quizzes WHERE quizId = ?', [quiz.quizId]);
+
+        return selectedQuiz[0]
     }
 
     async updateQuiz({ quiz }) {
+        console.log(4, quiz)
         const [result] = await db.query(
-            'UPDATE quizzes SET quiz = ? WHERE quizId = ?',
-            [quiz.quiz, quiz.quizID]
+            'UPDATE quizzes SET quiz = ? WHERE quizId= ?',
+            [JSON.stringify(quiz), quiz.quizId]
         );
+
+        console.log(5, result)
 
         if (result.affectedRows === 0) {
             throw new Error('Quiz not found or not updated.');
         }
 
-        const [updatedQuiz] = await db.query('SELECT * FROM quizzes WHERE quizId = ?', [quiz.quizID]);
+        const [updatedQuiz] = await db.query('SELECT * FROM quizzes WHERE quizId = ?', [quiz.quizId]);
+
+        console.log(6, updatedQuiz)
         return updatedQuiz[0];
     }
 
@@ -44,20 +51,19 @@ class QuizService{
         return quizzes.map(item => item.quiz);
     }
 
-    async getQuizByID(quizID) {
+    async getQuizById(quizId) {
         try {
-            const [result] = await db.query('SELECT * FROM quizzes WHERE quizId = ?', [quizID]);
+            const [result] = await db.query('SELECT * FROM quizzes WHERE quizId = ?', [quizId]);
             return result[0]; // Return the quiz if found
         } catch (error) {
             throw error;
         }
     }
 
-    async deleteQuizById(quizID) {
-        console.log(quizID)
+    async deleteQuizById(quizId) {
         const [result] = await db.query(
             'DELETE FROM quizzes WHERE quizId = ?',
-            [quizID]
+            [quizId]
         );
 
         if (result.affectedRows === 0) {

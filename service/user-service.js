@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt')
-const uuid = require('uuid');
 const ApiError = require("../exseptions/api-error");
 const db = require("../db/db")
 const {UserDto, FullUserDto} = require("../dtos/user-dto");
@@ -41,8 +40,7 @@ class UserService{
     }
 
     async logout(refreshToken) {
-        const token = await tokenService.removeToken(refreshToken);
-        return token;
+        return await tokenService.removeToken(refreshToken);
     }
 
     async refresh(refreshToken) {
@@ -58,8 +56,6 @@ class UserService{
 
         const tokens = tokenService.generateTokens({ ...userDto });
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
-
-        console.log({ ...tokens, user: userDto })
 
         return { ...tokens, user: userDto };
     }
@@ -93,6 +89,13 @@ class UserService{
         } catch (error) {
             console.error(error);
         }
+    }
+
+    async getUserById(userId) {
+        const [userRows] = await db.query('SELECT * FROM person WHERE id = ?', [userId]);
+        const user = userRows[0];
+        const fullUserDto = new FullUserDto(user);
+        return { user: fullUserDto };
     }
 
 

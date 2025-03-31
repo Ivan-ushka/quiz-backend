@@ -13,6 +13,7 @@ router.post('/login', userController.login);
 router.post('/logout', userController.logout);
 router.get('/refresh', userController.refresh);
 router.get('/user', userController.getUser);
+router.get('/user/:id', userController.getUser);
 router.patch('/update/user/', userController.update);
 
 router.post('/set/quiz', quizController.setQuiz);

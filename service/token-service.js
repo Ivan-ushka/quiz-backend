@@ -29,12 +29,12 @@ class TokenService{
     }
 
     async saveToken(userId, refreshToken) {
-        const [tokenData] = await db.query('SELECT * FROM token WHERE userID = ?', [userId]);
+        const [tokenData] = await db.query('SELECT * FROM token WHERE userId = ?', [userId]);
         if (tokenData.length !== 0) {
-            await db.query('UPDATE token SET refreshToken = ? WHERE userID = ?', [refreshToken, userId]);
+            await db.query('UPDATE token SET refreshToken = ? WHERE userId = ?', [refreshToken, userId]);
             return tokenData[0];
         }
-        const [token] = await db.query('INSERT INTO token (refreshToken, userID) VALUES (?, ?)', [refreshToken, userId]);
+        const [token] = await db.query('INSERT INTO token (refreshToken, userId) VALUES (?, ?)', [refreshToken, userId]);
         return token[0];
     }
 

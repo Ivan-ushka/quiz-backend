@@ -74,7 +74,6 @@ class UserController{
         try {
            
             const {email, password} = req.body;
-            console.log({email, password})
             const isCheck = await userService.checkPwd(email, password)
             return res.json(isCheck)
         } catch (error) {
@@ -85,7 +84,6 @@ class UserController{
     async changePwd(req, res, next){
         try {
             const {email, password} = req.body;
-            console.log({email, password})
             const userData = await userService.changePwd(email, password)
             return res.json(userData)
         } catch (error) {
@@ -97,6 +95,16 @@ class UserController{
         try {
             const {refreshToken} = req.cookies;
             const userData  = await userService.getUser(refreshToken);
+            return res.json(userData)
+        }catch (e) {
+            next(e)
+        }
+    }
+
+    async getUserById(req, res, next){
+        try {
+            const userId = req.params.id
+            const userData  = await userService.getUserById(userId);
             return res.json(userData)
         }catch (e) {
             next(e)

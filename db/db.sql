@@ -18,7 +18,7 @@ create TABLE token(
 
 create TABLE quizzes (
     id SERIAL PRIMARY KEY,
-    quizID VARCHAR(255),
+    quizId VARCHAR(255),
     userId INTEGER REFERENCES person (id)
     quiz JSONB,
 );
