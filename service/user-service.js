@@ -75,17 +75,20 @@ class UserService{
     async update(newDataUser) {
         try {
             const { id, ...fieldToUpdate } = newDataUser;
+            console.log(newDataUser)
             const field = Object.keys(fieldToUpdate)[0];
-            const value = fieldToUpdate[field];
+            let value = fieldToUpdate[field];
 
             const query = {
                 sql: `UPDATE person SET ${field} = ? WHERE id = ?`,
                 values: [value, id]
             };
-            const [updatedPersonResult] = await db.query(query);
-            const updatedPerson = updatedPersonResult[0];
-            const updatedPersonDto = new FullUserDto(updatedPerson);
-            return { user: updatedPersonDto };
+            await db.query(query);
+
+            const [userRows] = await db.query('SELECT * FROM person WHERE id = ?', [id]);
+
+            const fullUserDto = new FullUserDto(userRows[0]);
+            return { user: fullUserDto };
         } catch (error) {
             console.error(error);
         }
