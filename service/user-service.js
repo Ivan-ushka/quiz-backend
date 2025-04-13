@@ -75,7 +75,6 @@ class UserService{
     async update(newDataUser) {
         try {
             const { id, ...fieldToUpdate } = newDataUser;
-            console.log(newDataUser)
             const field = Object.keys(fieldToUpdate)[0];
             let value = fieldToUpdate[field];
 
@@ -102,26 +101,26 @@ class UserService{
     }
 
 
-    /* async checkPwd(name, password){
-         const user = await db.query(`SELECT * FROM person WHERE name= $1;`, [name]);
+    async changePwd(id, pwd, newPwd){
+        const [userRows] = await db.query(`SELECT * FROM person WHERE id = ?;`, [id]);
+        const user = userRows[0];
 
-         return await bcrypt.compare(pwd, user.pwd);
-     }
- */
-    /*async changePwd(email, password){
-        const hashPassword = await bcrypt.hash(password, 3)
+        if(!user){
+            throw ApiError.BadRequest('Пользователь с таким username не найден');
+        }
 
-        const user = await db.query(`SELECT * FROM users WHERE email= $1;`, [email]);
-        user.password = hashPassword
-        await user.save()
+        const checkPwds = await bcrypt.compare(pwd, user.password);
 
-        const userDto = new UserDto(user);
+        if(!checkPwds){
+            throw ApiError.BadRequest('Исходный пароль не верен');
+        }
 
-        const tokens = tokenService.generateTokens({...userDto});
-        await tokenService.saveToken(userDto.id, tokens.refreshToken);
+        const hashPassword = await bcrypt.hash(pwd, 3);
 
-        return {...tokens, user: userDto}
-    }*/
+        await db.query('INSERT INTO person (id, password) VALUES (?, ?)', [user.id, hashPassword]);
+
+        return { message: 'Password changed successfully.'};
+    }
 }
 
 module.exports = new UserService()

@@ -70,21 +70,10 @@ class UserController{
      
     }
 
-    async checkPwd(req, res, next){
-        try {
-           
-            const {email, password} = req.body;
-            const isCheck = await userService.checkPwd(email, password)
-            return res.json(isCheck)
-        } catch (error) {
-             next(error)
-        }
-    }
-
     async changePwd(req, res, next){
         try {
-            const {email, password} = req.body;
-            const userData = await userService.changePwd(email, password)
+            const {id, pwd, newPwd} = req.body;
+            const userData = await userService.changePwd(id, pwd, newPwd)
             return res.json(userData)
         } catch (error) {
              next(error)

@@ -15,6 +15,7 @@ router.get('/refresh', userController.refresh);
 router.get('/user', userController.getUser);
 router.get('/user/:id', userController.getUser);
 router.patch('/update/user/', userController.update);
+router.patch('/changePwd', userController.changePwd);
 
 router.post('/set/quiz', quizController.setQuiz);
 router.put('/update/quiz', quizController.updateQuiz);
