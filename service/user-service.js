@@ -8,6 +8,11 @@ class UserService{
         const [candidate] = await db.query('SELECT * FROM person WHERE name = ?', [name]);
         if (candidate.length !== 0) throw ApiError.BadRequest(`Пользователь с таким username ${name} уже существует`);
 
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
+        if (!passwordRegex.test(password)) {
+            throw ApiError.BadRequest('Пароль должен содержать хотя бы одну заглавную и прописную букву и цифру');
+        }
+
         const hashPassword = await bcrypt.hash(password, 3);
 
         // Insert the user and retrieve the last inserted ID
