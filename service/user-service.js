@@ -15,11 +15,9 @@ class UserService{
 
         const hashPassword = await bcrypt.hash(password, 3);
 
-        // Insert the user and retrieve the last inserted ID
         const [result] = await db.query('INSERT INTO person (name, password) VALUES (?, ?)', [name, hashPassword]);
-        const userId = result.insertId; // Get the ID of the newly inserted user
+        const userId = result.insertId;
 
-        // Now retrieve the user from the database
         const [user] = await db.query('SELECT * FROM person WHERE id = ?', [userId]);
 
         const userDto = new UserDto(user[0]);
